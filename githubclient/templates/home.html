@@ -1,0 +1,176 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if github_account_info %}
+  <p class="mt-5">
+    Você está conectado com o Github: 
+    <a href="https://github.com/{{ github_account_info['login'] }}">
+      {{ github_account_info['login'] }}
+    </a>
+  </p>
+  <form action="{{ url_for('main.home') }}" method="POST">
+    {{ search_form.hidden_tag() }}
+    <div class="form-group">
+    {% if search_form.search.errors %}
+      <div class="input-group mb-3">
+          {{ search_form.search(class="form-control is-invalid") }}
+          {{ search_form.submit(class="btn btn-primary") }}
+          <div class="invalid-feedback">
+            {% for error in search_form.search.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+      </div>
+    {% else %}
+      <div class="input-group mb-3">
+          {{ search_form.search(class="form-control") }}
+          {{ search_form.submit(class="btn btn-primary") }}
+      </div>
+    {% endif %}  
+    </div>
+  </form>
+  <div class="row">
+    {% for repo in repositories.items %}
+      <div class="col-md-12">
+        <div class="repo-box row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm position-relative bg-white">
+          <div class="p-4 d-flex flex-column position-static">
+            <div class="row">
+            <div class="col-10">
+              <h4>
+                <a class="text-dark" href="#">{{ repo['name'] }}</a>
+              </h4>
+            </div>
+            <div class="col-2">
+              <span class="badge rounded-pill bg-secondary bagde-stars float-end">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-star-fill align-middle" viewBox="0 0 16 16">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                  </svg>
+                <span class="align-middle">
+                  {{ repo['stars'] }}     
+                </span>
+              </span>
+            </div>
+            <div class="col-12">
+            <p class="card-text mb-auto text-dark">
+              <strong>Descrição:</strong> 
+              {% if repo['description'] %}
+                {{ repo['description'] }}
+              {% else %}
+                Sem descrição
+              {% endif %}
+            </p>
+            <div class="card-text mb-auto text-dark mt-2">
+              <strong>Tags:</strong> 
+              {% for tag in repo.tags %}
+                  <span class="badge bg-info bagde-tag align-middle">
+                    <span class="text">
+                      {{ tag.name }}
+                    </span>
+                    <button type="button" class="btn btn-info btn-xs btn-info-no-hover text-white" data-bs-toggle="modal" data-bs-target="#relationshipRemoveModal" data-tag-id="{{ tag.id }}" data-repository-id="{{ repo['id_repo'] }}">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                      </svg>
+                    </button>
+                  </span>
+              {% else %}
+                Nenhuma tag relacionada
+              {% endfor %}
+            </div>
+              <button type="button" class="btn btn-outline-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#tagRelationshipModal" data-bs-id="{{ repo['id_repo'] }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg> Relacionar tags
+              </button>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <p>Não há resultados.</p>
+    {% endfor %}
+
+    {% if repositories %}
+      {% if repositories.pages > 1 %}
+        <nav>
+          <ul class="pagination">
+          <li class="page-item {% if repositories.page == 1 %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('main.home', page=repositories.prev_num) }}" tabindex="-1" aria-disabled="true">Previous</a>
+          </li>
+          {% for page_num in repositories.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+              {% if repositories.page == page_num %}
+                <li class="page-item active"><a class="page-link" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a></li>
+              {% endif %}
+            {% else %}
+              <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+            {% endif %}
+          {% endfor %}
+          <li class="page-item {% if repositories.page == repositories.pages %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('main.home', page=repositories.next_num) }}">Next</a>
+          </li>
+          </ul>
+        </nav>
+      {% endif %}
+    {% endif %}
+
+    <!-- Modal Relacionar Tags -->
+    <div class="modal fade text-dark" id="tagRelationshipModal" tabindex="-1" aria-labelledby="tagRelationshipModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form action="{{ url_for('tags.relationship') }}" method="POST">
+            <div class="modal-header">
+              <h5 class="modal-title" id="tagRelationshipModalLabel">Relacionar tags</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" name="github_project_id" value="">
+              <select class="form-select" name="tags" multiple>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Remover Relação de Tags -->
+  <div class="modal fade text-dark" id="relationshipRemoveModal" tabindex="-1" aria-labelledby="relationshipRemoveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="relationshipRemoveModalLabel">Remover relação da tag?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          A tag não estará mais relacionada com este repositório, confirma?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <form action="{{ url_for('tags.removeRelationship') }}" method="POST">
+            <input type="hidden" name="tag_id" value="">
+            <input type="hidden" name="repository_id" value="">
+            <button type="submit" class="btn btn-primary">Confirmar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% else %}
+  <div class="home-not-logged text-center mt-5">
+    <p class="lead">Faça login com o github para poder</p>
+    <p class="lead">adicionar tags em seus repositórios.</p>
+    
+    <p class="lead">
+      <a href="{{ url_for('github.login') }}" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Login com o Github</a>
+    </p>
+  </div>
+{% endif %}
+
+{% endblock content %}

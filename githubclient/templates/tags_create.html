@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+  <p class="mt-5">{{ legend }}</p>
+  <form method="POST" action="" id="formAddTag">
+    {{ form.hidden_tag() }}
+      <div class="form-group mt-3">
+        <div class="form-group">
+          {% if form.name.errors %}
+            <div class="input-group mb-3">
+              {{ form.name(class="form-control form-control-lg is-invalid", placeholder="Nome da tag...") }}
+              {{ form.submit(class="btn btn-outline-info") }}
+              <div class="invalid-feedback">
+                {% for error in form.name.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          {% else %}
+            <div class="input-group mb-3">
+              {{ form.name(class="form-control form-control-lg") }}
+              {{ form.submit(class="btn btn-primary") }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+  </form>
+{% endblock content %}
