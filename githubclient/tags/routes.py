@@ -133,7 +133,6 @@ def relationship():
     repository = Repository.query.filter_by(id_repo=github_project_id).first_or_404()
     
     tags = request.form.getlist('tags')
-
     for tag_id in tags:
         tag = Tags.query.filter_by(id=tag_id).first_or_404()
 
@@ -153,10 +152,9 @@ def removeRelationship():
 
     repository_id = request.form.get('repository_id')
     repository = Repository.query.filter_by(id_repo=repository_id).first_or_404()
-   
     tag_id = request.form.get('tag_id')
     tag = Tags.query.filter_by(id=tag_id).first_or_404()
-
+    
     repository.tags.remove(tag)
     db.session.commit()
 

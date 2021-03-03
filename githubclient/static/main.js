@@ -11,8 +11,11 @@ if (document.getElementById('tagRelationshipModal') != null) {
     var recipient = button.getAttribute('data-bs-id')
     var githubProjectInput = tagRelationshipModal.querySelector('#tagRelationshipModal input[name="github_project_id"]')
     githubProjectInput.value = recipient
+    var modalBodyMessage = tagRelationshipModal.querySelector('#tagRelationshipModal .modal-body .message')
     var tagsSelect = tagRelationshipModal.querySelector('#tagRelationshipModal select[name="tags"]')
-    
+    var btnSumit = tagRelationshipModal.querySelector('#tagRelationshipModal .modal-footer .btn-submit')
+    var btnCancel = tagRelationshipModal.querySelector('#tagRelationshipModal .modal-footer .btn-cancel')
+
     var ajax = new XMLHttpRequest();
     ajax.open("GET", "tags/getTags", true);
     ajax.send();
@@ -20,12 +23,27 @@ if (document.getElementById('tagRelationshipModal') != null) {
       if (ajax.readyState == 4 && ajax.status == 200) {
         var data = ajax.responseText;
         var tags = JSON.parse(data)
-        tagsSelect.innerHTML = '';
-        for (let [key, value] of Object.entries(tags)) {
-          var opt = document.createElement('option');
-          opt.value = key;
-          opt.innerHTML = value;
-          tagsSelect.appendChild(opt);
+        
+        if (Object.keys(tags).length > 0) {
+          tagsSelect.innerHTML = '';
+          modalBodyMessage.innerHTML = '';
+          modalBodyMessage.classList.add('d-none');
+          tagsSelect.classList.remove('d-none');
+          btnSumit.classList.remove('d-none');
+          btnCancel.classList.remove('d-none');
+          for (let [key, value] of Object.entries(tags)) {
+            var opt = document.createElement('option');
+            opt.value = key;
+            opt.innerHTML = value;
+            tagsSelect.appendChild(opt);
+          }
+        } else {
+          modalBodyMessage.innerHTML = '';
+          modalBodyMessage.append('Ainda não temos tags criadas, acesse o menu tags para fazer isto.')
+          modalBodyMessage.classList.remove('d-none');
+          tagsSelect.classList.add('d-none');
+          btnSumit.classList.add('d-none');
+          btnCancel.classList.add('d-none'); 
         }
       }
     }
