@@ -1,11 +1,11 @@
 
 # Github client
 
-Github client is a phyton tool that allows your users to add tags to their repositories.
+Github client is a phyton tool that allows your users to add tags to their Github repositories.
 
 ## Getting Started
 
-First of all it is necessary that you have python installed and preferably do the installation of requiriments.txt inside a virtualenv.
+First of all it is necessary that you have python 3.9 installed and preferably do the installation of requiriments.txt inside a virtualenv.
 
 ```
 git clone git@github.com:steniols/github-client.git
