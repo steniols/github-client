@@ -17,7 +17,7 @@ def sincronize_repositories():
                 name=item['full_name'], 
                 id_github_account=github_account_info['id'],
                 description=item['description'],
-                url=item['url'],
+                url=item['svn_url'],
                 stars=item['stargazers_count']
             )
             db.session.add(data)
