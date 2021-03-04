@@ -1,5 +1,5 @@
 
-# Github client
+# Github client.
 
 Github client is a phyton tool that allows your users to add tags to their Github repositories.
 
