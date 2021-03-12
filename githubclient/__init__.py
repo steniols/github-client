@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from githubclient.config import Config
 from flask_dance.contrib.github import make_github_blueprint, github
+from dotenv import load_dotenv
+load_dotenv()
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
@@ -24,9 +26,8 @@ def create_app(config_class=Config):
     app.register_blueprint(tags)
     app.register_blueprint(errors)
 
-
-    github_blueprint = make_github_blueprint(client_id='34c2485e8a5d1d5d69be',
-                                            client_secret='a33fb8e966f5b7d13e7cd5b01c5db454ccd21f94')
+    github_blueprint = make_github_blueprint(client_id=os.getenv('CLIENT_ID'),
+                                           client_secret=os.getenv('CLIENT_SECRET'))
 
     app.register_blueprint(github_blueprint, url_prefix='/github_login')
 
