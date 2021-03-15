@@ -7,7 +7,8 @@ from flask import url_for
 from dotenv import load_dotenv
 from random import randrange
 
-load_dotenv()
+BASEDIR = os.path.abspath(os.path.dirname('../githubclient/.env'))
+load_dotenv(os.path.join(BASEDIR, '.env'))
 
 
 def acess_app(monkeypatch, authorize):

@@ -1,10 +1,8 @@
-import os
 import json
 import requests
 from flask_dance.consumer.storage import MemoryStorage
 from githubclient import create_app
 from flask import url_for
-from dotenv import load_dotenv
 from random import randrange
 from githubclient.main.routes import *
 
