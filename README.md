@@ -11,7 +11,7 @@ First of all it is necessary that you have python 3.9 installed and preferably d
 git clone git@github.com:steniols/github-client.git
 cd github-client
 cp githubclient/.env.sample githubclient/.env
-pip install -r requeriments.txt
+pip install -r requirements.txt
 ```
 
 On [Github's developer settings](https://github.com/settings/developers) create a Oauth APP, it's important to insert your app url in *Homepage URL* and *Authorization callback URL*.
