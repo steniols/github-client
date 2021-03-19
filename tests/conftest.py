@@ -1,5 +1,4 @@
 import pytest
-
 from flask import current_app
 from githubclient import create_app
 from flask_dance.contrib.github import github

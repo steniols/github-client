@@ -1,7 +1,6 @@
 from githubclient.models import Tags
 from githubclient.models import Repository
 
-
 def test_new_tag():
     tag = Tags(name='Frontend', id_github_account='123456')
     assert tag.name == 'Frontend'

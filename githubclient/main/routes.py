@@ -1,7 +1,5 @@
 
-import os
-import json
-import requests
+import os, json, requests
 from flask import render_template, request, Blueprint, redirect, url_for, session, current_app
 from flask_dance.contrib.github import make_github_blueprint, github
 from githubclient import db, bcrypt
@@ -58,7 +56,6 @@ def home():
         search_form=search_form
     )
 
-
 @main.route("/logout")
 def logout():
     blueprint = current_app.blueprints['github']
@@ -77,7 +74,7 @@ def logout():
         )
         return redirect(url_for('main.home'))
 
-
+@main.route("/github_authorized")
 @main.context_processor
 def github_authorized():
     github_account_info = github.get('/user')

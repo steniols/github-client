@@ -1,15 +1,10 @@
-import os
-import json
-import requests
+import os, random
 from flask_dance.consumer.storage import MemoryStorage
 from githubclient import create_app
-from flask import url_for
 from dotenv import load_dotenv
-from random import randrange
 
 BASEDIR = os.path.abspath(os.path.dirname('../githubclient/.env'))
 load_dotenv(os.path.join(BASEDIR, '.env'))
-
 
 def acess_app(monkeypatch, authorize):
     if (authorize):
@@ -22,7 +17,7 @@ def acess_app(monkeypatch, authorize):
     return app
 
 def get_random_num():
-    return str(randrange(10000))
+    return str(random.random())
 
 def test_tags_list(monkeypatch):
     app = acess_app(monkeypatch, True)
@@ -65,7 +60,7 @@ def test_tags_delete_post(monkeypatch):
     app = acess_app(monkeypatch, True)
 
     headers = {'User-Agent': 'Mozilla/5.0'}
-    payload = {'tag_id':get_random_num(),'id_github_account':get_random_num()}
+    payload = {'tag_id':get_random_num(),'id_github_account':str(random.random())}
 
     with app.test_client() as client:
         response = client.post(os.getenv('BASE_URL') + '/tags/delete',headers=headers,data=payload)
