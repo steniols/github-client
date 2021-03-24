@@ -1,14 +1,13 @@
-from datetime import datetime
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from githubclient import db
-from flask import current_app
 from flask_login import UserMixin
 
+from githubclient import db
 
-rel = db.Table('rel',
-    db.Column('id_tag', db.Integer, db.ForeignKey('tags.id')),
-    db.Column('id_repo', db.Integer, db.ForeignKey('repository.id_repo')),
+rel = db.Table(
+    "rel",
+    db.Column("id_tag", db.Integer, db.ForeignKey("tags.id")),
+    db.Column("id_repo", db.Integer, db.ForeignKey("repository.id_repo")),
 )
+
 
 class Repository(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,10 +18,13 @@ class Repository(db.Model, UserMixin):
     url = db.Column(db.String(255), nullable=False)
     stars = db.Column(db.String(255), nullable=False)
 
-    tags = db.relationship('Tags', secondary=rel, backref=db.backref('tags', lazy='dynamic'))
+    tags = db.relationship(
+        "Tags", secondary=rel, backref=db.backref("tags", lazy="dynamic")
+    )
 
     def __repr__(self):
         return f"Tags('{self.name}', '{self.id_repo}, '{self.id_github_account}')"
+
 
 class Tags(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,4 +33,3 @@ class Tags(db.Model, UserMixin):
 
     def __repr__(self):
         return f"Tags('{self.name}', '{self.id_github_account}')"
-
