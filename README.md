@@ -7,10 +7,15 @@ Github client is a phyton tool that allows your users to add tags to their Githu
 
 First of all it is necessary that you have python 3.9 installed and preferably do the installation of requiriments.txt inside a virtualenv.
 
-```
+```bash
 git clone git@github.com:steniols/github-client.git
 cd github-client
 cp githubclient/.env.sample githubclient/.env
+```
+
+Do this inside your virtual environment:
+
+```bash
 pip install -r requirements.txt
 ```
 
@@ -23,13 +28,13 @@ This APP will generate a *CLIENT_ID* and *CLIENT_SECRET*, we'll update these val
 
 On project root folder just run:
 
-```
+```bash
 python run.py
 ```
 
 ## Tests
 
-```
+```bash
 pytest -v
 ```
 
