@@ -32,12 +32,10 @@ On project root folder just run:
 python run.py
 ```
 
+and then access [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+
 ## Tests
 
 ```bash
 pytest -v
 ```
-
-## Live version
-
-http://stenio.pythonanywhere.com/
